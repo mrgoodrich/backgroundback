@@ -1,7 +1,9 @@
 package com.backgroundback;
 
+import com.backgroundback.model.WeatherConditions;
 import com.backgroundback.networking.WeatherConditionsLoader;
 import com.backgroundback.userinput.InputParser;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.*;
 
 import java.util.Scanner;
@@ -24,8 +26,16 @@ public class Main {
             CompletableFuture weatherFuture = weatherConditionsLoader.getWeatherConditions(id);
 
             try {
+
                Response weatherResponse = (Response) weatherFuture.get();
-               System.out.println(weatherResponse.body());
+//               System.out.println(weatherResponse.body().string());
+
+               ObjectMapper objectMapper = new ObjectMapper();
+               WeatherConditions weatherConditions = objectMapper.readValue(weatherResponse.body().string(), WeatherConditions.class);
+
+               System.out.println(weatherConditions.getReport().getConditions().getText());
+
+
             } catch (Exception exception) {
                System.out.println(exception);
             }
