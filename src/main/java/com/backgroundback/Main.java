@@ -28,7 +28,7 @@ public class Main {
             try {
 
                Response weatherResponse = (Response) weatherFuture.get();
-//               System.out.println(weatherResponse.body().string());
+               System.out.println(weatherResponse.body().string());
 
                ObjectMapper objectMapper = new ObjectMapper();
                WeatherConditions weatherConditions = objectMapper.readValue(weatherResponse.body().string(), WeatherConditions.class);
