@@ -1,5 +1,6 @@
 plugins {
     id 'application'
+    id 'com.github.johnrengelman.shadow' version '6.0.0'
 }
 
 group 'com.mattgoodrichapps'
@@ -7,7 +8,7 @@ version '1.0-SNAPSHOT'
 
 apply plugin: "java"
 ext {
-    javaMainClass = "com.mattgoodrichapps.Main"
+    javaMainClass = "com.backgroundback.Main"
 }
 
 repositories {
@@ -16,7 +17,7 @@ repositories {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
-    compile 'com.squareup.okhttp3:okhttp:5.0.0-alpha.2'
+    compile 'com.squareup.okhttp3:okhttp:4.9.1'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
 }
@@ -25,7 +26,7 @@ application {
     mainClassName = javaMainClass
 }
 
-jar {
+shadowJar {
     manifest {
         attributes(
             "Main-Class": javaMainClass
@@ -34,10 +35,10 @@ jar {
 }
 
 task runWithExecJarOnClassPath(type: Exec) {
-    dependsOn jar
+    dependsOn shadowJar
     group = "Execution"
     description = "Run main from output jar"
-    commandLine "java", "-classpath", jar.archiveFile.get(), javaMainClass
+    commandLine "java", "-classpath", shadowJar.archiveFile.get(), javaMainClass
 }
 
 test {

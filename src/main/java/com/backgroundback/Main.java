@@ -1,14 +1,19 @@
 package com.backgroundback;
 
+import com.backgroundback.networking.WeatherConditionsLoader;
 import com.backgroundback.userinput.InputParser;
+import okhttp3.*;
 
 import java.util.Scanner;
+import java.util.concurrent.CompletableFuture;
 
 public class Main {
 
    public static void main(String[] args) {
       Scanner scanner = new Scanner(System.in);
       InputParser parser = new InputParser();
+      OkHttpClient client = new OkHttpClient();
+      WeatherConditionsLoader weatherConditionsLoader = new WeatherConditionsLoader(client);
 
       System.out.println("Please enter one or more airport identifiers:");
       while (scanner.hasNextLine()) {
@@ -16,7 +21,14 @@ public class Main {
 
          System.out.println("Entered " + airportIdentifiersRaw);
          parser.parseAirportIdentifiers(airportIdentifiersRaw).stream().forEach(id -> {
-            System.out.println("Would find weather for " + id);
+            CompletableFuture weatherFuture = weatherConditionsLoader.getWeatherConditions(id);
+
+            try {
+               Response weatherResponse = (Response) weatherFuture.get();
+               System.out.println(weatherResponse.body());
+            } catch (Exception exception) {
+               System.out.println(exception);
+            }
          });
       }
    }
