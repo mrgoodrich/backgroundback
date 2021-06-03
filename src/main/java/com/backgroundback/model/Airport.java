@@ -8,6 +8,9 @@ import lombok.Data;
 public class Airport {
    String icao;
    String name;
+   Runway[] runways;
+   double latitude;
+   double longitude;
 
    @Data
    @JsonIgnoreProperties(ignoreUnknown = true)

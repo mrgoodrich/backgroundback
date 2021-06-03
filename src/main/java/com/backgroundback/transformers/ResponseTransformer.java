@@ -26,17 +26,10 @@ public class ResponseTransformer {
          String responseBody = response.body().string();
 //         System.out.println(responseBody);
          return Optional.of(objectMapper.readValue(responseBody, type));
-      } catch (InterruptedException e) {
-         e.printStackTrace();
-      } catch (ExecutionException e) {
-         System.out.println("Execution exception");
-         e.printStackTrace();
-      } catch (JsonParseException e) {
-         e.printStackTrace();
-      } catch (JsonMappingException e) {
-         e.printStackTrace();
+      } catch (InterruptedException | ExecutionException e) {
+         System.out.println("Failed to get " + type.getName());
       } catch (IOException e) {
-         e.printStackTrace();
+         System.out.println("Failed to parse " + type.getName());
       }
       return Optional.empty();
    }

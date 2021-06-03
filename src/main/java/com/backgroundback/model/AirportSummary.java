@@ -8,7 +8,7 @@ import lombok.Data;
 public class AirportSummary {
    String airportIdentifier;
    String airportName;
-   int[] runways;
+   String[] runways;
    double latitude;
    double longitude;
 

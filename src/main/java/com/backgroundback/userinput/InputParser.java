@@ -9,8 +9,12 @@ public class InputParser {
    public InputParser() { }
 
    public List<String> parseAirportIdentifiers(String rawInput) {
-      return Arrays.stream(rawInput.split(","))
+      List<String> ids = Arrays.stream(rawInput.split(","))
             .map(match -> match.replace(" ", ""))
             .collect(Collectors.toList());
+      if (ids.isEmpty()) {
+         System.out.println("No valid ids entered. Please try again.");
+      }
+      return ids;
    }
 }

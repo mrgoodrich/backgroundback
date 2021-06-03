@@ -18,10 +18,11 @@ public class OkHttpResponseFuture implements Callback {
    }
 
    @Override public void onFailure(Call call, IOException e) {
-      future.completeExceptionally(e);
+      System.out.println("Failed to reach " + call.request().url());
+      future.cancel(true);
    }
 
-   @Override public void onResponse(Call call, Response response) throws IOException {
+   @Override public void onResponse(Call call, Response response) {
       future.complete(response);
    }
 }
