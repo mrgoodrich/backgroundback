@@ -1,4 +1,4 @@
-package com.mattgoodrichapps.userinput;
+package com.backgroundback.userinput;
 
 import java.util.Arrays;
 import java.util.List;

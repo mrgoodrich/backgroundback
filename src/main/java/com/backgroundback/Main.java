@@ -1,8 +1,7 @@
-package com.mattgoodrichapps;
+package com.backgroundback;
 
-import com.mattgoodrichapps.userinput.InputParser;
+import com.backgroundback.userinput.InputParser;
 
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
