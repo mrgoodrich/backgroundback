@@ -1,9 +1,14 @@
 plugins {
-    id 'java'
+    id 'application'
 }
 
 group 'com.mattgoodrichapps'
 version '1.0-SNAPSHOT'
+
+apply plugin: "java"
+ext {
+    javaMainClass = "com.mattgoodrichapps.Main"
+}
 
 repositories {
     mavenCentral()
@@ -11,4 +16,24 @@ repositories {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
+    compile 'com.squareup.okhttp3:okhttp:5.0.0-alpha.2'
+}
+
+application {
+    mainClassName = javaMainClass
+}
+
+jar {
+    manifest {
+        attributes(
+            "Main-Class": javaMainClass
+        )
+    }
+}
+
+task runWithExecJarOnClassPath(type: Exec) {
+    dependsOn jar
+    group = "Execution"
+    description = "Run main from output jar"
+    commandLine "java", "-classpath", jar.archiveFile.get(), javaMainClass
 }
