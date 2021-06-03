@@ -24,19 +24,6 @@ import java.util.stream.Collectors;
 public class Main {
 
    public static void main(String[] args) {
-      printIntroAndInstructions();
-
-      AirportSummaryRunner.runAirportSummaryTool();
-   }
-
-   private static void printIntroAndInstructions() {
-      System.out.println("********************************************************");
-      System.out.println("*  Airport Summary Tool     by Matt Goodrich           *");
-      System.out.println("*                                                      *");
-      System.out.println("*  Usage: Enter one or more ICAO airport identifiers.  *");
-      System.out.println("*                                                      *");
-      System.out.println("*  For example: kpwm, kaus                             *");
-      System.out.println("*  You can enter more identifiers at any time.         *");
-      System.out.println("********************************************************\n");
+      AirportSummaryRunner runner = new AirportSummaryRunner();
    }
 }
