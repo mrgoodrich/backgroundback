@@ -1,4 +1,4 @@
-package test.com.mattgoodrichapps.userinput;
+package com.mattgoodrichapps.userinput;
 
 import com.mattgoodrichapps.userinput.InputParser;
 import org.junit.jupiter.api.BeforeEach;
