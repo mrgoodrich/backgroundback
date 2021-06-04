@@ -57,7 +57,12 @@ public class AirportSummaryTransformer {
             .setRelativeHumidityPercent(conditions.getRelativeHumidity());
       currentWeatherReport.setGreatestCloudCoverageSummary(getGreatestCloudCoverage(conditions.getCloudLayers()));
       currentWeatherReport.setWindSpeedMPH(knotsToMph(conditions.getWind().getSpeedKts()));
+      currentWeatherReport.setCardinalWindDirection(
+            getSecondaryIntercardinalWindDirection(conditions.getWind().getFrom()));
+
       airportSummary.setCurrentWeatherReport(currentWeatherReport.build());
+
+      
 
       return airportSummary.build();
    }
@@ -87,5 +92,28 @@ public class AirportSummaryTransformer {
 
    private int knotsToMph(int kts) {
       return (int) Math.round(kts * KTS_TO_MPH);
+   }
+
+   private static final List<String> SECONDARY_INTERCARDINAL_WIND_DIRECTIONS =
+         ImmutableList
+               .of("N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW","NNW");
+   private static final double NUM_DEGREES_PER_SECONDARY_INTERCARDINAL_DIRECTION = 22.5;
+
+   private String getSecondaryIntercardinalWindDirection(int from) {
+      // Edge case - north counts for both lowest and highest number of degrees.
+      if (from > (360 - NUM_DEGREES_PER_SECONDARY_INTERCARDINAL_DIRECTION / 2)) {
+         return "N";
+      }
+
+      // Start negative to simplify adding algorithm.
+      double currentDegree = 0 - NUM_DEGREES_PER_SECONDARY_INTERCARDINAL_DIRECTION / 2;
+
+      for (String direction : SECONDARY_INTERCARDINAL_WIND_DIRECTIONS) {
+         if (currentDegree < from && from < currentDegree + NUM_DEGREES_PER_SECONDARY_INTERCARDINAL_DIRECTION) {
+            return direction;
+         }
+         currentDegree += NUM_DEGREES_PER_SECONDARY_INTERCARDINAL_DIRECTION;
+      }
+      return "Unknown";
    }
 }

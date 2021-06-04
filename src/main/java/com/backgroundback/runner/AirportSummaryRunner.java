@@ -53,7 +53,7 @@ public class AirportSummaryRunner {
          String airportIdentifiersRaw = scanner.nextLine();
          List<String> airportIds = parser.parseAirportIdentifiers(airportIdentifiersRaw);
 
-         System.out.println("Loading airport summaries: " + String.join(", ", airportIds + "\n"));
+         System.out.println("Loading airport summaries: " + String.join(", ", airportIds) + "\n");
 
          for (String id : airportIds) {
             loadAirportSummary(id);
@@ -81,7 +81,7 @@ public class AirportSummaryRunner {
             String airportSummary =
                   airportSummaryTransformer
                         .createAirportSummaryJsonObject(airport.get(), weatherConditions.get());
-            System.out.println(airportSummary);
+            System.out.println(airportSummary + "\n");
          }
       };
    }

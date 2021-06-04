@@ -29,7 +29,7 @@ public class AirportSummary {
       int windSpeedMPH;
 
       // Cardinal directions to secondary-intercardinal precision.
-      int cardinalDirection;
+      String cardinalWindDirection;
    }
 
    @Data
