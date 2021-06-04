@@ -16,6 +16,7 @@ import static com.backgroundback.model.WeatherConditions.Report.Conditions.CLOUD
 
 public class AirportSummaryTransformer {
 
+   public static final double KTS_TO_MPH = 1.150779448;
    private ObjectMapper objectMapper;
 
    public AirportSummaryTransformer(ObjectMapper objectMapper) {
@@ -55,6 +56,7 @@ public class AirportSummaryTransformer {
       currentWeatherReport
             .setRelativeHumidityPercent(conditions.getRelativeHumidity());
       currentWeatherReport.setGreatestCloudCoverageSummary(getGreatestCloudCoverage(conditions.getCloudLayers()));
+      currentWeatherReport.setWindSpeedMPH(knotsToMph(conditions.getWind().getSpeedKts()));
       airportSummary.setCurrentWeatherReport(currentWeatherReport.build());
 
       return airportSummary.build();
@@ -64,7 +66,8 @@ public class AirportSummaryTransformer {
       return (int) Math.round(celsius * 1.8 + 32);
    }
 
-   private static final List<String> READABLE_OBSCURATIONS = ImmutableList.of("Clear", "Few", "Scattered", "Broken", "Overcast");
+   private static final List<String> READABLE_OBSCURATIONS =
+         ImmutableList.of("Clear", "Few", "Scattered", "Broken", "Overcast");
 
    /**
     * Returns the greatest obscuration, prioritizing lower ceilings if there are multiple layers with the same amount.
@@ -80,5 +83,9 @@ public class AirportSummaryTransformer {
                   (layer.getCoverage().equals("clr") ? "" : " at " + layer.getAltitudeFt() + "ft"))
             .findFirst()
             .orElse("Unknown");
+   }
+
+   private int knotsToMph(int kts) {
+      return (int) Math.round(kts * KTS_TO_MPH);
    }
 }

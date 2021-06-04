@@ -41,6 +41,8 @@ public class WeatherConditions {
          CloudLayers[] cloudLayers;
          CloudLayers[] cloudLayersV2;
          String[] weather;
+         Visibility visibility;
+         Wind wind;
          ForecastPeriod period;
 
          public static final List<String> CLOUD_LAYER_PRIORITY_ASCENDING =

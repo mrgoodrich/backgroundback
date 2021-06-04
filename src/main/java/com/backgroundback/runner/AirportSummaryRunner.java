@@ -53,7 +53,7 @@ public class AirportSummaryRunner {
          String airportIdentifiersRaw = scanner.nextLine();
          List<String> airportIds = parser.parseAirportIdentifiers(airportIdentifiersRaw);
 
-         System.out.println("Loading airport summaries: " + String.join(", ", airportIds));
+         System.out.println("Loading airport summaries: " + String.join(", ", airportIds + "\n"));
 
          for (String id : airportIds) {
             loadAirportSummary(id);
