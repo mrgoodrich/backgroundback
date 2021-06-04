@@ -2,6 +2,7 @@ package com.backgroundback.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.collect.ImmutableList;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.jetbrains.annotations.NotNull;
 
@@ -24,6 +25,11 @@ public class WeatherConditions {
       @JsonIgnoreProperties(ignoreUnknown = true)
       public static class Conditions {
          public Conditions() {}
+
+         // For testing.
+         public Conditions(String periodDateStart) {
+            this.period = new ForecastPeriod(periodDateStart);
+         }
 
          String text;
          String ident;
@@ -50,6 +56,7 @@ public class WeatherConditions {
 
          @Data
          @JsonIgnoreProperties(ignoreUnknown = true)
+         @AllArgsConstructor
          public static class CloudLayers implements Comparable<CloudLayers> {
             public CloudLayers() {}
 
@@ -64,16 +71,16 @@ public class WeatherConditions {
 
                // More obscuration means greater coverage.
                if (thisCoverage > otherCoverage) {
-                  return 1;
-               } else if (thisCoverage < otherCoverage) {
                   return -1;
+               } else if (thisCoverage < otherCoverage) {
+                  return 1;
                }
 
                // If the same obscuration, then use lower ceiling.
                if (this.altitudeFt < other.altitudeFt) {
-                  return 1;
-               } else if (this.altitudeFt > other.altitudeFt) {
                   return -1;
+               } else if (this.altitudeFt > other.altitudeFt) {
+                  return 1;
                }
                return 0;
             }
@@ -150,6 +157,11 @@ public class WeatherConditions {
       public static class ForecastPeriod {
          String dateStart;
          String dateEnd;
+
+         // For testing.
+         public ForecastPeriod(String dateStart) {
+            this.dateStart = dateStart;
+         }
       }
    }
 }

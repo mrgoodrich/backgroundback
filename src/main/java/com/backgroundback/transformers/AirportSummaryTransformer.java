@@ -107,7 +107,7 @@ public class AirportSummaryTransformer {
     * @param celsius the input temperature in degrees celsius.
     * @return the output temperature in degrees fahrenheit.
     */
-   private int celsiusToFahrenheit(double celsius) {
+   public int celsiusToFahrenheit(double celsius) {
       return (int) Math.round(celsius * 1.8 + 32);
    }
 
@@ -123,12 +123,12 @@ public class AirportSummaryTransformer {
     * @param cloudLayers the cloud layers existing for the given condition.
     * @return a textual string describing the greatest cloud coverage.
     */
-   private String getGreatestCloudCoverage(CloudLayers[] cloudLayers) {
+   public String getGreatestCloudCoverage(CloudLayers[] cloudLayers) {
       return Arrays.stream(cloudLayers).sorted()
             .map(layer -> READABLE_OBSCURATIONS.get(CLOUD_LAYER_PRIORITY_ASCENDING.indexOf(layer.getCoverage())) +
                   (layer.getCoverage().equals("clr") ? "" : " at " + layer.getAltitudeFt() + "ft"))
             .findFirst()
-            .orElse("Unknown");
+            .orElse("Skies clear");
    }
 
    /**
@@ -137,7 +137,7 @@ public class AirportSummaryTransformer {
     * @param kts the input knots to be converted.
     * @return the converted miles per hour.
     */
-   private int knotsToMph(int kts) {
+   public int knotsToMph(int kts) {
       return (int) Math.round(kts * KTS_TO_MPH);
    }
 
@@ -154,7 +154,7 @@ public class AirportSummaryTransformer {
     * @param degrees the selected degrees, 001 to 360.
     * @return a textual secondary intercardinal wind direction.
     */
-   private String getSecondaryIntercardinalWindDirection(int degrees) {
+   public String getSecondaryIntercardinalWindDirection(int degrees) {
       // Edge case - north counts for both lowest and highest number of degrees.
       if (degrees > (360 - NUM_DEGREES_PER_SECONDARY_INTERCARDINAL_DIRECTION / 2)) {
          return "N";
@@ -208,7 +208,7 @@ public class AirportSummaryTransformer {
     * @param forecastDateIssued the date time when the TAF was issued.
     * @return a string containing the hours and minutes.
     */
-   private String getTimeOffset(Conditions condition, String forecastDateIssued) {
+   public String getTimeOffset(Conditions condition, String forecastDateIssued) {
       LocalDateTime dateTimeForecastIssued = LocalDateTime.parse(forecastDateIssued, DATE_TIME_FORMATTER);
       LocalDateTime startOfThisPeriod = LocalDateTime.parse(condition.getPeriod().getDateStart(), DATE_TIME_FORMATTER);
 
