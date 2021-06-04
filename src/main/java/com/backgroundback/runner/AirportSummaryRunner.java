@@ -1,7 +1,6 @@
 package com.backgroundback.runner;
 
 import com.backgroundback.model.Airport;
-import com.backgroundback.model.AirportSummary;
 import com.backgroundback.model.WeatherConditions;
 import com.backgroundback.networking.AirportLoader;
 import com.backgroundback.networking.FFOkHttpClientBuilder;

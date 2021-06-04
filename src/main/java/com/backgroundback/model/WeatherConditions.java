@@ -1,8 +1,11 @@
 package com.backgroundback.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.google.common.collect.ImmutableList;
 import lombok.Data;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
 import java.util.Map;
 
 @Data
@@ -40,14 +43,42 @@ public class WeatherConditions {
          String[] weather;
          ForecastPeriod period;
 
+         public static final List<String> CLOUD_LAYER_PRIORITY_ASCENDING =
+               ImmutableList.of("clr", "few", "sct", "bkn", "ovc");
+
          @Data
          @JsonIgnoreProperties(ignoreUnknown = true)
-         public static class CloudLayers {
+         public static class CloudLayers implements Comparable<CloudLayers> {
             public CloudLayers() {}
 
             String coverage;
             int altitudeFt;
             boolean ceiling;
+
+            @Override
+            public int compareTo(@NotNull CloudLayers other) {
+               int thisCoverage = getCoverageValue(this.coverage);
+               int otherCoverage = getCoverageValue(other.coverage);
+
+               // More obscuration means greater coverage.
+               if (thisCoverage > otherCoverage) {
+                  return 1;
+               } else if (thisCoverage < otherCoverage) {
+                  return -1;
+               }
+
+               // If the same obscuration, then use lower ceiling.
+               if (this.altitudeFt < other.altitudeFt) {
+                  return 1;
+               } else if (this.altitudeFt > other.altitudeFt) {
+                  return -1;
+               }
+               return 0;
+            }
+
+            private int getCoverageValue(String coverage) {
+               return CLOUD_LAYER_PRIORITY_ASCENDING.indexOf(coverage.toLowerCase());
+            }
          }
 
          @Data
