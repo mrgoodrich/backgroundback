@@ -28,6 +28,8 @@ While the command-line interface is nice, the application would become more "pro
 
 Caching could be implemented to prevent repeated calls to the Airport and Weather Conditions API's. These could expire after a set amount of time. This way, if there were X requests per minute, there would only be one API call to each airport instead of potentially X.
 
+Retry with exponential backoff would improve the user experience in the event of failed requests to the Airport and Weather Conditions API's.
+
 The command-line interface could be improved by showing a loading indicator. This would allow users to know how many more summaries are in progress.
 
 The summary could be expanded to include more airport information and weather information. This would take advantage of how it acts as a single endpoint for weather and airport information about a single airport (versus two calls to the weather conditions and airport). Additional fields could be added to help pilots, such as information about services available at airports like courtesy cars.

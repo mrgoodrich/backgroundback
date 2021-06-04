@@ -158,6 +158,8 @@ public class WeatherConditions {
          String dateStart;
          String dateEnd;
 
+         public ForecastPeriod() {}
+
          // For testing.
          public ForecastPeriod(String dateStart) {
             this.dateStart = dateStart;
