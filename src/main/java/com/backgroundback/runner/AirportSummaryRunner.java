@@ -19,6 +19,7 @@ import java.util.Scanner;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 
+/** Manages the CLI for the tool version of this application. Could be replaced with other forms of invocation. */
 public class AirportSummaryRunner {
 
    private final Scanner scanner;
@@ -46,6 +47,9 @@ public class AirportSummaryRunner {
       runAirportSummaryTool();
    }
 
+   /**
+    * Begin the command-line tool allowing users to receive airport summaries.
+    */
    private void runAirportSummaryTool() {
       printIntroAndInstructions();
 
@@ -61,14 +65,27 @@ public class AirportSummaryRunner {
       }
    }
 
+   /**
+    * Load an airport summary for the given identifier from the airport and weather conditions API's.
+    *
+    * @param id the ICAO identifier for the desired airport.
+    */
    private void loadAirportSummary(String id) {
       CompletableFuture<Response> weatherFuture = weatherConditionsLoader.getWeatherConditions(id);
       CompletableFuture<Response> airportFuture = airportLoader.getAirportInformation(id);
 
+      // Wait until both the weather data and airport data is received before processing the summary.
       CompletableFuture.allOf(weatherFuture, airportFuture)
             .whenComplete(processAirportSummary(weatherFuture, airportFuture));
    }
 
+   /**
+    * Creates an airport summary given two responses with the airport and weather conditions.
+    *
+    * @param weatherFuture the optionally successful weather response.
+    * @param airportFuture the optionally successful airport response.
+    * @return a BiConsumer containing the desired action to be taken when both requests are complete.
+    */
    @NotNull
    private BiConsumer<Void, Throwable> processAirportSummary(CompletableFuture<Response> weatherFuture,
                                                              CompletableFuture<Response> airportFuture) {
@@ -77,6 +94,7 @@ public class AirportSummaryRunner {
          Optional<WeatherConditions> weatherConditions =
                responseTransformer.transformResponse(weatherFuture, WeatherConditions.class);
 
+         // Only proceed if both of the API requests were successful.
          if (weatherConditions.isPresent() && airport.isPresent()) {
             String airportSummary =
                   airportSummaryTransformer
@@ -86,6 +104,9 @@ public class AirportSummaryRunner {
       };
    }
 
+   /**
+    * Prints user instructions for how to use this tool.
+    */
    private void printIntroAndInstructions() {
       System.out.println("********************************************************");
       System.out.println("*  Airport Summary Tool     by Matt Goodrich           *");

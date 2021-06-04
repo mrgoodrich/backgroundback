@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
+/* Transforms CompletableFutures into the desired Java POJO. */
 public class ResponseTransformer {
 
    ObjectMapper objectMapper;
@@ -16,6 +17,14 @@ public class ResponseTransformer {
       this.objectMapper = objectMapper;
    }
 
+   /**
+    * Transform a future into a Java POJO and handle exceptions appropriately for the airport summary tool.
+    *
+    * @param future the compeleted future.
+    * @param type the desired POJO for Jackson mapping.
+    * @param <T> generic type for the POJO.
+    * @return an optional POJO if the future succeeded and Jackson mapped successfully.
+    */
    public <T> Optional<T> transformResponse(CompletableFuture future, Class<T> type) {
       try {
          Response response = (Response) future.get();

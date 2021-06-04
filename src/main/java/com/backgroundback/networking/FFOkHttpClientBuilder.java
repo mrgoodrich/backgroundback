@@ -6,8 +6,14 @@ import okhttp3.OkHttpClient;
 
 import java.util.concurrent.TimeUnit;
 
+/** Builds an OkHttpClient for interaction with the target server. */
 public class FFOkHttpClientBuilder {
 
+   /**
+    * Configures an OkHttpClient for the target server, including setting BasicAuth username and password.
+    *
+    * @return an OkHttpClient ready to use with the weather and airport API's.
+    */
    public static OkHttpClient createFFOkHttpClient() {
       OkHttpClient.Builder client = new OkHttpClient.Builder();
       client.authenticator((route, response) -> {

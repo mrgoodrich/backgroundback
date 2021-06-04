@@ -6,6 +6,7 @@ import okhttp3.Response;
 
 import java.util.concurrent.CompletableFuture;
 
+/** Manages requests to the airport API. */
 public class AirportLoader {
 
    private OkHttpClient client;
@@ -14,6 +15,12 @@ public class AirportLoader {
       this.client = okHttpClient;
    }
 
+   /**
+    * Submits a request to the airport API for the given identifier.
+    *
+    * @param airportIdentifier the airport ICAO identifier.
+    * @return an asynchronous future containing the airport data response.
+    */
    public CompletableFuture<Response> getAirportInformation(String airportIdentifier) {
       Request request = new Request.Builder()
             .url("https://qa.foreflight.com/airports/" + airportIdentifier)
