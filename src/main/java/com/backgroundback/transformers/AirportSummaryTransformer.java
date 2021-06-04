@@ -12,17 +12,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 
 import java.io.IOException;
-import java.time.Instant;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.List;
 
 import static com.backgroundback.model.WeatherConditions.Report.Conditions.CLOUD_LAYER_PRIORITY_ASCENDING;
-import static java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 
 public class AirportSummaryTransformer {
 
@@ -143,7 +139,6 @@ public class AirportSummaryTransformer {
       forecastReportBuilder.setOffsetFromDateIssuedToThisPeriodHrsMins(getTimeOffset(condition, forecastDateIssued));
       forecastReportBuilder.setTempF(celsiusToFahrenheit(condition.getTempC()));
       forecastReportBuilder.setWindSpeedMPH(knotsToMph(condition.getWind().getSpeedKts()));
-      System.out.println(magneticVariationWest);
       forecastReportBuilder.setWindDirectionDegreesTrue(condition.getWind().getFrom() + magneticVariationWest);
 
       return forecastReportBuilder.build();
