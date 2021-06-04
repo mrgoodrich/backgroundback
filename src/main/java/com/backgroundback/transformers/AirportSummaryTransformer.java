@@ -3,16 +3,26 @@ package com.backgroundback.transformers;
 import com.backgroundback.model.Airport;
 import com.backgroundback.model.AirportSummary;
 import com.backgroundback.model.AirportSummary.CurrentWeatherReport;
+import com.backgroundback.model.AirportSummary.ForecastReport;
 import com.backgroundback.model.WeatherConditions;
+import com.backgroundback.model.WeatherConditions.Report.Conditions;
 import com.backgroundback.model.WeatherConditions.Report.Conditions.CloudLayers;
+import com.backgroundback.model.WeatherConditions.Report.Forecast;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 
 import java.io.IOException;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.List;
 
 import static com.backgroundback.model.WeatherConditions.Report.Conditions.CLOUD_LAYER_PRIORITY_ASCENDING;
+import static java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 
 public class AirportSummaryTransformer {
 
@@ -37,7 +47,7 @@ public class AirportSummaryTransformer {
       AirportSummary.AirportSummaryBuilder airportSummary = AirportSummary.builder();
 
       WeatherConditions.Report report = weatherConditions.getReport();
-      WeatherConditions.Report.Conditions conditions = report.getConditions();
+      Conditions conditions = report.getConditions();
 
       // Some airports don't specify ident in airport info, so default to identifier in weather report.
       airportSummary.setAirportIdentifier(
@@ -62,7 +72,13 @@ public class AirportSummaryTransformer {
 
       airportSummary.setCurrentWeatherReport(currentWeatherReport.build());
 
-      
+      Forecast forecast = report.getForecast();
+      String forecastDateIssued = forecast.getDateIssued();
+      int magneticVariationWest = airport.getMagneticVariationWestOrEstimate();
+      airportSummary.setForecastReport(new ForecastReport[]{
+            createForecastReport(forecast.getConditions()[0], forecastDateIssued, magneticVariationWest),
+            createForecastReport(forecast.getConditions()[1], forecastDateIssued, magneticVariationWest)
+      });
 
       return airportSummary.build();
    }
@@ -115,5 +131,30 @@ public class AirportSummaryTransformer {
          currentDegree += NUM_DEGREES_PER_SECONDARY_INTERCARDINAL_DIRECTION;
       }
       return "Unknown";
+   }
+
+   private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssZ");
+
+   private ForecastReport createForecastReport(Conditions condition,
+                                               String forecastDateIssued,
+                                               int magneticVariationWest) {
+      ForecastReport.ForecastReportBuilder forecastReportBuilder = ForecastReport.builder();
+
+      forecastReportBuilder.setOffsetFromDateIssuedToThisPeriodHrsMins(getTimeOffset(condition, forecastDateIssued));
+      forecastReportBuilder.setTempF(celsiusToFahrenheit(condition.getTempC()));
+      forecastReportBuilder.setWindSpeedMPH(knotsToMph(condition.getWind().getSpeedKts()));
+      System.out.println(magneticVariationWest);
+      forecastReportBuilder.setWindDirectionDegreesTrue(condition.getWind().getFrom() + magneticVariationWest);
+
+      return forecastReportBuilder.build();
+   }
+
+   private String getTimeOffset(Conditions condition, String forecastDateIssued) {
+      LocalDateTime dateTimeForecastIssued = LocalDateTime.parse(forecastDateIssued, DATE_TIME_FORMATTER);
+      LocalDateTime startOfThisPeriod = LocalDateTime.parse(condition.getPeriod().getDateStart(), DATE_TIME_FORMATTER);
+
+      long hours = dateTimeForecastIssued.until(startOfThisPeriod, ChronoUnit.HOURS);
+      long minutes = dateTimeForecastIssued.until(startOfThisPeriod, ChronoUnit.MINUTES);
+      return hours + ":" + (minutes % 60);
    }
 }

@@ -11,6 +11,7 @@ public class Airport {
    Runway[] runways;
    double latitude;
    double longitude;
+   int magneticVariationWestOrEstimate;
 
    @Data
    @JsonIgnoreProperties(ignoreUnknown = true)

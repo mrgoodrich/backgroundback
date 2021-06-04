@@ -14,7 +14,7 @@ public class AirportSummary {
 
    CurrentWeatherReport currentWeatherReport;
 
-   ForecastReport forecastReport;
+   ForecastReport[] forecastReport;
 
    @Data
    @Builder(setterPrefix = "set")
@@ -36,7 +36,7 @@ public class AirportSummary {
    @Builder(setterPrefix = "set")
    public static class ForecastReport {
       // hrs:min
-      String timeOffsetFromStartOfPeriod;
+      String offsetFromDateIssuedToThisPeriodHrsMins;
 
       int tempF;
       int windSpeedMPH;
