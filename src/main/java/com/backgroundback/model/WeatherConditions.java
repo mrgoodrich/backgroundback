@@ -52,7 +52,7 @@ public class WeatherConditions {
          ForecastPeriod period;
 
          public static final List<String> CLOUD_LAYER_PRIORITY_ASCENDING =
-               ImmutableList.of("clr", "few", "sct", "bkn", "ovc");
+               ImmutableList.of("few", "sct", "bkn", "ovc");
 
          @Data
          @JsonIgnoreProperties(ignoreUnknown = true)

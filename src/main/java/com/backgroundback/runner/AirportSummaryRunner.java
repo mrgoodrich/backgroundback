@@ -76,7 +76,7 @@ public class AirportSummaryRunner {
 
       // Wait until both the weather data and airport data is received before processing the summary.
       CompletableFuture.allOf(weatherFuture, airportFuture)
-            .whenComplete(processAirportSummary(weatherFuture, airportFuture));
+            .whenCompleteAsync(processAirportSummary(weatherFuture, airportFuture));
    }
 
    /**

@@ -65,13 +65,13 @@ public class AirportSummaryTransformer {
       // Add selective data from the Airport API to the AirportSummary.
       // Some airports don't specify ident in airport info, so default to identifier in weather report.
       airportSummary.setAirportIdentifier(
-            airport.getIcao() != null ? airport.getIcao()
-                  : conditions.getIdent());
+              airport.getIcao() != null ? airport.getIcao()
+                      : conditions.getIdent());
       airportSummary.setAirportName(airport.getName());
       airportSummary.setRunways(
-            Arrays.stream(airport.getRunways())
-                  .map(Airport.Runway::getIdent)
-                  .toArray(String[]::new));
+              Arrays.stream(airport.getRunways())
+                      .map(Airport.Runway::getIdent)
+                      .toArray(String[]::new));
       airportSummary.setLatitude(airport.getLatitude());
       airportSummary.setLongitude(airport.getLongitude());
 
@@ -79,11 +79,11 @@ public class AirportSummaryTransformer {
       CurrentWeatherReport.CurrentWeatherReportBuilder currentWeatherReport = CurrentWeatherReport.builder();
       currentWeatherReport.setTempF(celsiusToFahrenheit(conditions.getTempC()));
       currentWeatherReport
-            .setRelativeHumidityPercent(conditions.getRelativeHumidity());
+              .setRelativeHumidityPercent(conditions.getRelativeHumidity());
       currentWeatherReport.setGreatestCloudCoverageSummary(getGreatestCloudCoverage(conditions.getCloudLayers()));
       currentWeatherReport.setWindSpeedMPH(knotsToMph(conditions.getWind().getSpeedKts()));
       currentWeatherReport.setCardinalWindDirection(
-            getSecondaryIntercardinalWindDirection(conditions.getWind().getFrom()));
+              getSecondaryIntercardinalWindDirection(conditions.getWind().getFrom()));
 
       airportSummary.setCurrentWeatherReport(currentWeatherReport.build());
 
@@ -94,8 +94,8 @@ public class AirportSummaryTransformer {
       int magneticVariationWest = airport.getMagneticVariationWestOrEstimate();
       // The exercise instructions sound like [1] and [2] should be used, but [0] and [1] seem more intuitive.
       airportSummary.setForecastReport(new ForecastReport[]{
-            createForecastReport(forecast.getConditions()[0], forecastDateIssued, magneticVariationWest),
-            createForecastReport(forecast.getConditions()[1], forecastDateIssued, magneticVariationWest)
+              createForecastReport(forecast.getConditions()[0], forecastDateIssued, magneticVariationWest),
+              createForecastReport(forecast.getConditions()[1], forecastDateIssued, magneticVariationWest)
       });
 
       return airportSummary.build();
@@ -125,8 +125,9 @@ public class AirportSummaryTransformer {
     */
    public String getGreatestCloudCoverage(CloudLayers[] cloudLayers) {
       return Arrays.stream(cloudLayers).sorted()
+              .filter(layer -> CLOUD_LAYER_PRIORITY_ASCENDING.contains(layer.getCoverage()))
             .map(layer -> READABLE_OBSCURATIONS.get(CLOUD_LAYER_PRIORITY_ASCENDING.indexOf(layer.getCoverage())) +
-                  (layer.getCoverage().equals("clr") ? "" : " at " + layer.getAltitudeFt() + "ft"))
+                  " at " + layer.getAltitudeFt() + "ft")
             .findFirst()
             .orElse("Skies clear");
    }
